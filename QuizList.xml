@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfQuizQuestions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <QuizQuestions>
+    <question>What is the best?</question>
+    <quizAnswers>
+      <string>School</string>
+      <string> coding</string>
+      <string> music</string>
+      <string> driving</string>
+    </quizAnswers>
+    <correctAnswer>4</correctAnswer>
+  </QuizQuestions>
+  <QuizQuestions>
+    <question>What colour is grass?</question>
+    <quizAnswers>
+      <string>Blue</string>
+      <string>Red</string>
+      <string>Yellow</string>
+      <string>Green</string>
+    </quizAnswers>
+    <correctAnswer>3</correctAnswer>
+  </QuizQuestions>
+</ArrayOfQuizQuestions>
