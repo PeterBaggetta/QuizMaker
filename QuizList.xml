@@ -1,23 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ArrayOfQuizQuestions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <QuizQuestions>
-    <question>What is the best?</question>
-    <quizAnswers>
-      <string>School</string>
-      <string> coding</string>
-      <string> music</string>
-      <string> driving</string>
-    </quizAnswers>
-    <correctAnswer>4</correctAnswer>
-  </QuizQuestions>
-  <QuizQuestions>
-    <question>What colour is grass?</question>
-    <quizAnswers>
-      <string>Blue</string>
-      <string>Red</string>
-      <string>Yellow</string>
-      <string>Green</string>
-    </quizAnswers>
-    <correctAnswer>3</correctAnswer>
-  </QuizQuestions>
-</ArrayOfQuizQuestions>
+<QuestionStore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Questions>
+    <Question>
+      <question>What colour is the sky?</question>
+      <quizChoices>
+        <QuizChoices>
+          <answer>Red</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Blue</answer>
+          <isCorrect>true</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Green</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+      </quizChoices>
+    </Question>
+    <Question>
+      <question>What colour is the sky?</question>
+      <quizChoices>
+        <QuizChoices>
+          <answer>Red</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Blue</answer>
+          <isCorrect>true</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Green</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Yellow</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+      </quizChoices>
+    </Question>
+    <Question>
+      <question>What is the best brand of car?</question>
+      <quizChoices>
+        <QuizChoices>
+          <answer>VW</answer>
+          <isCorrect>true</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>BMW</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Honda</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+      </quizChoices>
+    </Question>
+    <Question>
+      <question>Are you having fun?</question>
+      <quizChoices>
+        <QuizChoices>
+          <answer>No</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Kinda</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>YES!</answer>
+          <isCorrect>true</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Absolutely</answer>
+          <isCorrect>true</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>No I hate life</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+      </quizChoices>
+    </Question>
+  </Questions>
+</QuestionStore>
