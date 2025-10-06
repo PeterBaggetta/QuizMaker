@@ -81,5 +81,26 @@
         </QuizChoices>
       </quizChoices>
     </Question>
+    <Question>
+      <question>What is the best keyboard</question>
+      <quizChoices>
+        <QuizChoices>
+          <answer>Razor</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Corsair</answer>
+          <isCorrect>true</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Logitech</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+        <QuizChoices>
+          <answer>Cooler Master</answer>
+          <isCorrect>false</isCorrect>
+        </QuizChoices>
+      </quizChoices>
+    </Question>
   </Questions>
 </QuestionStore>

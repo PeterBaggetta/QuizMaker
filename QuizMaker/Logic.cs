@@ -3,27 +3,37 @@ namespace QuizMaker
 {
     public class Logic
     {
-        // Build a Question from pieces the UI gathers
-        public static Question BuildQuestion(string prompt, List<string> choiceTexts, List<int> correctIndices)
+        /// <summary>
+        /// Build a Question from pieces the UI gathers
+        /// </summary>
+        /// <param name="question">Question that the player enters</param>
+        /// <param name="answerTexts">Answers that the players enters for the question</param>
+        /// <param name="correctAnswer">Correct answer for the question.</param>
+        /// <returns>The question that is fully built to be stored in the xml.</returns>
+        public static Question BuildQuestion(string question, List<string> answerTexts, List<int> correctAnswer)
         {
             var q = new Question();
-            q.question = prompt;
+            q.question = question;
 
-            for (int i = 0; i < choiceTexts.Count; i++)
+            for (int i = 0; i < answerTexts.Count; i++)
             {
                 var c = new QuizChoices();
-                c.answer = choiceTexts[i];
-                c.isCorrect = ListContains(correctIndices, i); // 0-based index
+                c.answer = answerTexts[i];
+                c.isCorrect = correctAnswer.Contains(i);
                 q.quizChoices.Add(c);
             }
             return q;
         }
 
-        // Parse comma-separated indices like "1,3" to a LIST of 0-based indices.
-        // - ignores blanks
-        // - ignores out-of-range numbers
-        // - avoids duplicates
-        public static List<int> ParseIndices(string input, int maxChoices)
+        /// <summary>
+        /// Go through the comma separated indexes
+        /// Ignore the blanks
+        /// Ignore any duplicate answers
+        /// </summary>
+        /// <param name="input">Player input of the multiple answers</param>
+        /// <param name="maxAnswers">Number of answers that the player has entered.</param>
+        /// <returns>The list separated out from its commas</returns>
+        public static List<int> ParseIndices(string input, int maxAnswers)
         {
             var list = new List<int>();
 
@@ -44,10 +54,10 @@ namespace QuizMaker
                 int oneBased;
                 if (int.TryParse(part, out oneBased))
                 {
-                    int idx = oneBased - 1; // convert 1..N from the UI into 0..N-1
-                    if (idx >= 0 && idx < maxChoices)
+                    int idx = oneBased - 1;
+                    if (idx >= 0 && idx < maxAnswers)
                     {
-                        if (!ListContains(list, idx))
+                        if (!list.Contains(idx))
                         {
                             list.Add(idx); // keep unique values only
                         }
@@ -57,7 +67,13 @@ namespace QuizMaker
             return list;
         }
 
-        // Check if the selected indices EXACTLY match the correct ones (order doesn’t matter)
+        /// <summary>
+        /// Check if the selected index exactly matches the correct ones
+        /// Order does not matter as long as the numbers are the same
+        /// </summary>
+        /// <param name="q">Question that the player is answering in the game</param>
+        /// <param name="selectedIndices">Selected answers that the player is guessing</param>
+        /// <returns>If the player answered correctly (True) or not (False)</returns>
         public static bool IsCorrect(Question q, List<int> selectedIndices)
         {
             // Build the list of correct indices from the question
@@ -79,7 +95,7 @@ namespace QuizMaker
             // Ensure every correct index is present in the selected list
             for (int i = 0; i < correct.Count; i++)
             {
-                if (!ListContains(selectedIndices, correct[i]))
+                if (!selectedIndices.Contains(correct[i]))
                 {
                     return false;
                 }
@@ -89,7 +105,11 @@ namespace QuizMaker
             return true;
         }
 
-        // Shuffle choices in-place (Fisher–Yates)
+        /// <summary>
+        /// Shuffle the answers in the question.
+        /// </summary>
+        /// <param name="q">Question that the player is answering</param>
+        /// <param name="rng">Random number to mix up the answers</param>
         public static void ShuffleChoices(Question q, Random rng)
         {
             for (int i = q.quizChoices.Count - 1; i > 0; i--)
@@ -101,7 +121,11 @@ namespace QuizMaker
             }
         }
 
-        // Shuffle questions in-place
+        /// <summary>
+        /// Shuffle the questions in the quiz to be in a different order
+        /// </summary>
+        /// <param name="questions">List of questions that will be displayed</param>
+        /// <param name="rng">Random number toi mix up the answers</param>
         public static void ShuffleQuestions(List<Question> questions, Random rng)
         {
             for (int i = questions.Count - 1; i > 0; i--)
@@ -111,17 +135,6 @@ namespace QuizMaker
                 questions[i] = questions[j];
                 questions[j] = tmp;
             }
-        }
-
-        // ---- tiny helper (avoids LINQ) ----
-        private static bool ListContains(List<int> list, int value)
-        {
-            for (int i = 0; i < list.Count; i++)
-                if (list[i] == value)
-                {
-                    return true;
-                }
-            return false;
         }
     }
 }

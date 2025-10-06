@@ -1,10 +1,13 @@
 ﻿
-using System.Security.Cryptography.X509Certificates;
+using static QuizMaker.Contants;
 
 namespace QuizMaker
 {
     public static class UI
     {
+        /// <summary>
+        /// Displays the welcome message to the game
+        /// </summary>
         public static void DisplayWelcomeMessage()
         {
             Console.WriteLine("=============================================================================");
@@ -14,7 +17,12 @@ namespace QuizMaker
             Console.WriteLine("=============================================================================");
         }
 
+
         public static bool firstPrint = true;
+        /// <summary>
+        /// Displays the Menu which tells the player their options for the game
+        /// </summary>
+        /// <returns>The player choice of mode</returns>
         public static string DisplayMenu()
         {
             if (!firstPrint)
@@ -26,11 +34,10 @@ namespace QuizMaker
                 firstPrint = false;
             }
 
-            Console.Clear();
             Console.WriteLine("===== QuizMaker =====");
-            Console.WriteLine("1) Build questions");
-            Console.WriteLine("2) Play quiz");
-            Console.WriteLine("0) Exit");
+            Console.WriteLine($"{EXIT}) Exit Game");
+            Console.WriteLine($"{BUILD_QUESTIONS}) Build questions");
+            Console.WriteLine($"{PLAY_QUIZ}) Play quiz");
             Console.Write("Choose: ");
 
             string choice = Console.ReadLine();
@@ -40,56 +47,57 @@ namespace QuizMaker
             }
             return choice;
         }
-        public static void BuildQuestionsLoop(QuestionStore store)
+
+        /// <summary>
+        /// This method builds the question when the player chooses to build their questions in the console application.
+        /// </summary>
+        /// <param name="questionList">Hold the list of questions.</param>
+        public static void BuildQuestionsLoop(QuestionStore questionList)
         {
             while (true)
             {
                 Console.Clear();
                 Console.WriteLine("=== Build Questions ===");
-                Console.Write("Enter question prompt (or just Enter to stop): ");
-                string prompt = Console.ReadLine();
-                if (prompt == null)
+                Console.Write("Enter question (or just Enter to stop): ");
+                string question = Console.ReadLine();
+                if (question == null)
                 {
-                    prompt = "";
+                    question = "";
                 }
-                if (prompt.Trim().Length == 0)
+                if (question.Trim().Length == 0)
                 {
                     break;
                 }
 
-                int choiceCount = ReadInt("How many answer quizChoices? (2-10): ", 2, 10);
+                int numOfAnswers = ReadInt($"How many answer quizChoices? ({MIN_ANSWERS}-{MAX_ANSWERS}): ");
 
-                var answers = new List<string>();
-                for (int i = 0; i < choiceCount; i++)
+                var answerList = new List<string>();
+                for (int i = 0; i < numOfAnswers; i++)
                 {
-                    Console.Write("Choice " + (i + 1) + " answer: ");
+                    Console.Write($"Choice {i + 1} answer: ");
                     string answer = Console.ReadLine();
                     if (answer == null)
                     {
                         answer = "";
                     }
-                    answers.Add(answer);
+                    answerList.Add(answer);
                 }
 
-                Console.WriteLine("Enter the number(s) of the correct answer(s), comma-separated (e.g., 2 or 1,3): ");
-                Console.Write("> ");
-                string raw = Console.ReadLine();
-                if (raw == null)
+                Console.WriteLine("Enter the number(s) of the correct answer(s), comma-separated (e.g. 2 or 1,3): ");
+                string rightAnswers = Console.ReadLine();
+                if (rightAnswers == null)
                 {
-                    raw = "";
+                    rightAnswers = "";
                 }
-                var correct = Logic.ParseIndices(raw, choiceCount);
+                var correct = Logic.ParseIndices(rightAnswers, numOfAnswers);
 
-                var q = Logic.BuildQuestion(prompt, answers, correct);
-                store.Questions.Add(q);
+                var q = Logic.BuildQuestion(question, answerList, correct);
+                questionList.Questions.Add(q);
 
-                Console.Write("Question added. Add another? (y/n): ");
-                string again = Console.ReadLine();
-                if (again == null)
-                {
-                    again = "";
-                }
-                if (!again.Equals("y", StringComparison.OrdinalIgnoreCase))
+                Console.Write("Question added. Add another? (Y/N): ");
+                ConsoleKeyInfo anotherQuestion = Console.ReadKey();
+                char addAnother = char.ToLower(anotherQuestion.KeyChar);
+                if (addAnother != ANOTHER)
                 {
                     break;
                 }
@@ -99,10 +107,14 @@ namespace QuizMaker
             Console.ReadLine();
         }
 
-        public static void PlayQuizLoop(QuestionStore store)
+        /// <summary>
+        /// Play the quiz game. Choose a random question and allow the user to answer each question.
+        /// </summary>
+        /// <param name="questionList">Hold the list of questions.</param>
+        public static void PlayQuizLoop(QuestionStore questionList)
         {
             Console.Clear();
-            if (store.Questions.Count == 0)
+            if (questionList.Questions.Count == 0)
             {
                 Console.WriteLine("No questions yet. Go build some first!");
                 Console.WriteLine("Press Enter to return.");
@@ -110,28 +122,28 @@ namespace QuizMaker
                 return;
             }
 
-            var rng = new Random();
-            var questions = new List<Question>(store.Questions);
-            Logic.ShuffleQuestions(questions, rng);
+            var rand = new Random();
+            var questions = new List<Question>(questionList.Questions);
+            Logic.ShuffleQuestions(questions, rand);
 
             int score = 0;
 
-            for (int qi = 0; qi < questions.Count; qi++)
+            for (int qIndex = 0; qIndex < questions.Count; qIndex++)
             {
                 Console.Clear();
-                var q = CloneQuestion(questions[qi]);
-                Logic.ShuffleChoices(q, rng);
+                var q = CloneQuestion(questions[qIndex]);
+                Logic.ShuffleChoices(q, rand);
 
-                Console.WriteLine("Question " + (qi + 1) + " of " + questions.Count);
+                Console.WriteLine($"Question {qIndex + 1} of {questions.Count}");
                 Console.WriteLine(q.question);
                 for (int i = 0; i < q.quizChoices.Count; i++)
                 {
-                    Console.WriteLine("  " + (i + 1) + ") " + q.quizChoices[i].answer);
+                    Console.WriteLine($"  {i + 1}) {q.quizChoices[i].answer}");
                 }
 
                 Console.WriteLine();
                 Console.WriteLine("Select your answer(s) by number (comma-separated if multiple):");
-                Console.Write("> ");
+                Console.Write("-> ");
                 string input = Console.ReadLine();
                 if (input == null)
                 {
@@ -154,7 +166,7 @@ namespace QuizMaker
                     {
                         if (q.quizChoices[i].isCorrect)
                         {
-                            Console.Write((i + 1) + " ");
+                            Console.Write($"{i + 1} ");
                         }
                     }
                     Console.WriteLine();
@@ -165,12 +177,19 @@ namespace QuizMaker
             }
 
             Console.Clear();
-            Console.WriteLine("Your score: " + score + "/" + questions.Count);
+            Console.WriteLine($"Your score: {score} / {questions.Count}");
             Console.WriteLine("Press Enter to return to menu.");
             Console.ReadLine();
         }
 
-        private static int ReadInt(string prompt, int min, int max)
+        /// <summary>
+        /// Reads an integer from the console and checks to make sure the number entered is within the bounds of the game.
+        /// </summary>
+        /// <param name="prompt">The question/prompt which is displayed on the console.</param>
+        /// <param name="min">Minimum number in range.</param>
+        /// <param name="max">Maximum number in range.</param>
+        /// <returns>Returns the number of answers for a question.</returns>
+        private static int ReadInt(string prompt)
         {
             while (true)
             {
@@ -182,15 +201,20 @@ namespace QuizMaker
                 }
 
                 int value;
-                if (int.TryParse(s, out value) && value >= min && value <= max)
+                if (int.TryParse(s, out value) && value >= MIN_ANSWERS && value <= MAX_ANSWERS)
                 {
                     return value;
                 }
 
-                Console.WriteLine("Please enter a number between " + min + " and " + max + ".");
+                Console.WriteLine($"Please enter a number between {MIN_ANSWERS} and {MAX_ANSWERS}.");
             }
         }
 
+        /// <summary>
+        /// Clones the question in the list.
+        /// </summary>
+        /// <param name="original">Original question that was chosen at random.</param>
+        /// <returns>Cloned question to display out to the player.</returns>
         private static Question CloneQuestion(Question original)
         {
             var q = new Question();
@@ -203,6 +227,17 @@ namespace QuizMaker
                 q.quizChoices.Add(copy);
             }
             return q;
+        }
+
+        /// <summary>
+        /// Displays a Invalid option text to the console for the user.
+        /// </summary>
+        public static void DisplayInvalid()
+        {
+            Console.WriteLine("=================================");
+            Console.WriteLine("  INVALID OPTION. Press Enter... ");
+            Console.WriteLine("=================================");
+            Console.ReadLine();
         }
     }
 }

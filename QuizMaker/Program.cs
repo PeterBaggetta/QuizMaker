@@ -1,5 +1,5 @@
 ﻿
-using System;
+using static QuizMaker.Contants;
 
 namespace QuizMaker
 {
@@ -7,10 +7,9 @@ namespace QuizMaker
     {
         static void Main(string[] args)
         {
+            UI.DisplayWelcomeMessage();
 
-            string path = @"..\..\..\..\QuizList.xml";
-
-            var store = XmlStorage.XmlLoad(path);
+            var questionList = XmlStorage.XmlLoad(PATH);
 
             while (true)
             {
@@ -18,21 +17,20 @@ namespace QuizMaker
 
                 switch (userChoice)
                 {
-                    case "1":
-                        UI.BuildQuestionsLoop(store);
-                        XmlStorage.XmlSave(path, store);
+                    case BUILD_QUESTIONS:
+                        UI.BuildQuestionsLoop(questionList);
+                        XmlStorage.XmlSave(PATH, questionList);
                         break;
 
-                    case "2":
-                        UI.PlayQuizLoop(store);
+                    case PLAY_QUIZ:
+                        UI.PlayQuizLoop(questionList);
                         break;
 
-                    case "0":
+                    case EXIT:
                         return;
 
                     default:
-                        Console.WriteLine("Invalid option. Press Enter...");
-                        Console.ReadLine();
+                        UI.DisplayInvalid();
                         break;
                 }
             }
