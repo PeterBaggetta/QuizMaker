@@ -11,19 +11,24 @@ namespace QuizMaker
 
             var questionList = XmlStorage.XmlLoad(PATH);
 
+            bool firstPrint = true;
+
             while (true)
             {
-                string userChoice = UI.DisplayMenu();
+                UI.DisplayMenu(firstPrint);
+                string userChoice = UI.GetUserChoice();
 
                 switch (userChoice)
                 {
                     case BUILD_QUESTIONS:
                         UI.BuildQuestionsLoop(questionList);
                         XmlStorage.XmlSave(PATH, questionList);
+                        firstPrint = false;
                         break;
 
                     case PLAY_QUIZ:
                         UI.PlayQuizLoop(questionList);
+                        firstPrint = false;
                         break;
 
                     case EXIT:
@@ -31,6 +36,7 @@ namespace QuizMaker
 
                     default:
                         UI.DisplayInvalid();
+                        firstPrint = false;
                         break;
                 }
             }

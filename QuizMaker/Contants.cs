@@ -2,7 +2,7 @@
 {
     public static class Contants
     {
-        public const string PATH = @"..\..\..\..\QuizList.xml";
+        public const string PATH = @"QuizList.xml";
 
         public const string BUILD_QUESTIONS = "1";
         public const string PLAY_QUIZ = "2";

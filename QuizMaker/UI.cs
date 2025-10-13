@@ -17,29 +17,30 @@ namespace QuizMaker
             Console.WriteLine("=============================================================================");
         }
 
-
-        public static bool firstPrint = true;
         /// <summary>
         /// Displays the Menu which tells the player their options for the game
         /// </summary>
-        /// <returns>The player choice of mode</returns>
-        public static string DisplayMenu()
+        /// <param name="firstPrint">True - Keep introduction printed, False - Clear Console for clean gameplay</param>
+        public static void DisplayMenu(bool firstPrint)
         {
             if (!firstPrint)
             {
                 Console.Clear();
             }
-            else
-            {
-                firstPrint = false;
-            }
-
+            
             Console.WriteLine("===== QuizMaker =====");
             Console.WriteLine($"{EXIT}) Exit Game");
             Console.WriteLine($"{BUILD_QUESTIONS}) Build questions");
             Console.WriteLine($"{PLAY_QUIZ}) Play quiz");
             Console.Write("Choose: ");
+        }
 
+        /// <summary>
+        /// Gets the players choice for the mode of the game
+        /// </summary>
+        /// <returns>The choice the player chose for the game</returns>
+        public static string GetUserChoice()
+        {
             string choice = Console.ReadLine();
             if (choice == null)
             {
@@ -103,6 +104,7 @@ namespace QuizMaker
                 }
             }
 
+            Console.WriteLine();
             Console.WriteLine("Saving... Press Enter to return to menu.");
             Console.ReadLine();
         }
